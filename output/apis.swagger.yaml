@@ -1,6 +1,6 @@
 swagger: "2.0"
 info:
-  title: minimax/text/v1/chat.proto
+  title: claude/text/v1/chat.proto
   version: version not set
 tags:
   - name: MinimaxService

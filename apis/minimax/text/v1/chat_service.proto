@@ -6,22 +6,23 @@ import "minimax/text/v1/chat.proto";
 import "google/api/annotations.proto";
 import "google/api/client.proto";
 
-option go_package = "github.com/ConnectAI-E/go-minimax/gen/go/minimax/text/v1;text";
+option go_package = "github.com/ConnectAI-E/go-claude/gen/go/claude/text/v1;text";
 option java_multiple_files = true;
-option java_outer_classname = "minimaxProto";
-option java_package = "com.qiniai.minimax.text.v1";
+option java_outer_classname = "claudeProto";
+option java_package = "com.connectai-e.claude.text.v1";
+
 
 service MinimaxService {
   rpc ChatCompletions(ChatCompletionsRequest) returns (ChatCompletionsResponse) {
     option (google.api.http) = {
-      post: "/v1/text/chatcompletion"
+      post: "/v1/text/complete"
       body: "*"
     };
     option (google.api.method_signature) = "*";
   }
   rpc ChatCompletionStream(ChatCompletionsRequest) returns (stream ChatCompletionsResponse) {
     option (google.api.http) = {
-      post: "/v1/text/chatcompletion-stream"
+      post: "/v1/text/complete-stream"
       body: "*"
     };
     option (google.api.method_signature) = "*";

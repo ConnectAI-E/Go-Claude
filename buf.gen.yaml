@@ -3,7 +3,7 @@ version: v1
 managed:
   enabled: true
   go_package_prefix:
-    default: github.com/ConnectAI-E/go-wenxin/gen/go
+    default: github.com/ConnectAI-E/go-claude/gen/go
     except:
       - buf.build/googleapis/googleapis
       - buf.build/envoyproxy/protoc-gen-validate

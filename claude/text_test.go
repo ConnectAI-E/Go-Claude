@@ -1,9 +1,9 @@
-package minimax
+package claude
 
 import (
 	"context"
 	"fmt"
-	textv1 "github.com/ConnectAI-E/go-minimax/gen/go/minimax/text/v1"
+	textv1 "github.com/ConnectAI-E/go-claude/gen/go/claude/text/v1"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )

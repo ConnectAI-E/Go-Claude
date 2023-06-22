@@ -1,4 +1,4 @@
-package minimax
+package claude
 
 import "errors"
 

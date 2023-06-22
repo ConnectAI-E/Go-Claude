@@ -1,4 +1,4 @@
-package minimax
+package claude
 
 import (
 	"github.com/imroc/req/v3"
