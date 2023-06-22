@@ -20,11 +20,12 @@
 ### Swagger 文档
 - [打开在线Swagger编辑器](https://editor.swagger.io/)
 - 导入[Swagger Api 文档](./output/apis.swagger.yaml)
-  <img width="120" alt="image" src="https://github.com/imroc/req/assets/50035229/efdbf241-0bb7-43a8-8389-749724f0e232">
+  
+<img width="1200" alt="image" src="https://github.com/imroc/req/assets/50035229/efdbf241-0bb7-43a8-8389-749724f0e232">
 
 ### 使用方法
 
-1. 访问 [Anthropic 官网](https://www.anthropic.com/index/introducing-claude)，申请[Claude API](https://www.anthropic.com/product) 权限。
+1. 访问 [Anthropic 官网](https://www.anthropic.com/index/introducing-claude)，申请 [Claude API](https://www.anthropic.com/product) 权限。
 2. 登录 [Claude Console](https://console.anthropic.com/login)，获取 [Api-Key](https://console.anthropic.com/account/keys)。
 3. 参考下面示例使用
 
