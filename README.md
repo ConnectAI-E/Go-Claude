@@ -13,7 +13,14 @@
 1. 全接口字段注释
 2. Chatcompletion 文本对话接口
 3. 无缝对接官方文档：单轮问答、历史记忆问答、流返回
-4. 支持swagger文档 和 ApiFox 文档
+4. 修改Prompt传参为数组模式，更方便的兼容openai的接口
+5. 支持swagger文档 和 ApiFox 文档
+
+
+### Swagger 文档
+- [打开在线Swagger编辑器](https://editor.swagger.io/)
+- 导入[Swagger Api 文档](./output/apis.swagger.yaml)
+  <img width="120" alt="image" src="https://github.com/imroc/req/assets/50035229/efdbf241-0bb7-43a8-8389-749724f0e232">
 
 ### 使用方法
 
@@ -29,9 +36,9 @@ package main
 import (
 	"context"
 	"fmt"
-	"os"
+	"github.com/ConnectAI-E/go-claude/claude"
 	textv1 "github.com/ConnectAI-E/go-claude/gen/go/claude/text/v1"
-	"github.com/ConnectAI-E/go-minimax/minimax"
+	"os"
 )
 
 //init client
@@ -39,25 +46,199 @@ import (
 func main() {
 
 	ctx := context.Background()
-	client, _ := minimax.New(
-		minimax.WithApiToken(os.Getenv("TEST_MINIMAX_API_TOKEN")),
-		minimax.WithGroupId(os.Getenv("TEST_MINIMAX_GROUP_ID")),
+	client, _ := claude.New(
+		claude.WithApiToken(os.Getenv("TEST_API_TOKEN")),
 	)
 
 	//chat
 	req := &textv1.ChatCompletionsRequest{
 		Messages: []*textv1.Message{
 			{
-				SenderType: "USER",
-				Text:       "hi~",
+				Role:    "Human",
+				Content: "hi~",
 			},
 		},
-		Model:       "abab5-chat",
-		Temperature: 0.7,
+		Model:             "claude-1-100k",
+		Temperature:       0.7,
+		MaxTokensToSample: 500,
 	}
 	res, _ := client.ChatCompletions(ctx, req)
 
-	fmt.Println(res.Choices) // output: 你好！有什么我可以帮助你的吗？
+	fmt.Println(res.Completion) // output: Hello
+
 }
 
 ```
+
+
+### 快速上手:
+
+<details>
+<summary>Claude Completion</summary>
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"github.com/ConnectAI-E/go-claude/claude"
+	textv1 "github.com/ConnectAI-E/go-claude/gen/go/claude/text/v1"
+	"os"
+)
+
+
+
+func main() {
+	ctx := context.Background()
+
+	client, _ := claude.New(
+		claude.WithApiToken(os.Getenv("TEST_API_TOKEN")),
+	)
+
+	//chat
+	req := &textv1.ChatCompletionsRequest{
+		Messages: []*textv1.Message{
+			{
+				Role:    "Human",
+				Content: "hi~",
+			},
+		},
+		Model:             "claude-1-100k",
+		Temperature:       0.7,
+		MaxTokensToSample: 500,
+	}
+	res, _ := client.ChatCompletions(ctx, req)
+
+	fmt.Println(res.Completion) // output: Hello
+
+}
+```
+</details>
+
+
+<details>
+<summary>Claude stream completion</summary>
+
+```go
+package main
+
+import (
+	"context"
+	"errors"
+	"fmt"
+	"github.com/ConnectAI-E/go-claude/claude"
+	textv1 "github.com/ConnectAI-E/go-claude/gen/go/claude/text/v1"
+	"io"
+	"os"
+)
+
+
+
+func main() {
+	ctx := context.Background()
+	
+	//init client
+	client, _ := claude.New(
+		claude.WithApiToken(os.Getenv("TEST_API_TOKEN")),
+	)
+
+	//chat
+	req := &textv1.ChatCompletionsRequest{
+		Messages: []*textv1.Message{
+			{
+				Role:    "Human",
+				Content: "hi~",
+			},
+		},
+		Model:             "claude-1-100k",
+		Temperature:       0.7,
+		MaxTokensToSample: 500,
+	}
+
+	stream, _ := client.ChatCompletionStream(ctx, req)
+	defer stream.CloseSend()
+	for {
+		response, err := stream.Recv()
+		if errors.Is(err, io.EOF) {
+			break
+		}
+		if err != nil {
+			fmt.Println(err)
+			break
+		}
+		fmt.Printf(response.Completion + "\n") 
+	}
+}
+
+
+```
+</details>
+
+
+<details>
+<summary>Claude history stream completion</summary>
+
+```go
+package main
+
+import (
+	"context"
+	"errors"
+	"fmt"
+	"github.com/ConnectAI-E/go-claude/claude"
+	textv1 "github.com/ConnectAI-E/go-claude/gen/go/claude/text/v1"
+	"io"
+	"os"
+)
+
+
+
+func main() {
+	ctx := context.Background()
+
+	//init client
+	client, _ := claude.New(
+		claude.WithApiToken(os.Getenv("TEST_API_TOKEN")),
+	)
+
+	//chat
+	req := &textv1.ChatCompletionsRequest{
+		Messages: []*textv1.Message{
+			{
+				Role:    "Human",
+				Content: "hi~",
+			},
+			{
+				Role:    "Assistant",
+				Content: "Hello",
+            },
+			{
+				Role:    "Human",
+				Content: "How are you?",
+            },
+		},
+		Model:             "claude-1-100k",
+		Temperature:       0.7,
+		MaxTokensToSample: 500,
+	}
+
+	stream, _ := client.ChatCompletionStream(ctx, req)
+	defer stream.CloseSend()
+	for {
+		response, err := stream.Recv()
+		if errors.Is(err, io.EOF) {
+			break
+		}
+		if err != nil {
+			fmt.Println(err)
+			break
+		}
+		fmt.Printf(response.Completion + "\n")
+	}
+}
+
+```
+</details>
+
+

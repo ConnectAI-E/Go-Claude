@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package minimax.text.v1;
+package claude.text.v1;
 
-import "minimax/text/v1/chat.proto";
+import "claude/text/v1/chat.proto";
 import "google/api/annotations.proto";
 import "google/api/client.proto";
 

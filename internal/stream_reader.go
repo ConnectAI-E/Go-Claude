@@ -5,7 +5,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"github.com/ConnectAI-E/go-minimax/pkg/errors"
+	"github.com/ConnectAI-E/go-claude/pkg/errors"
 	"io"
 	"net/http"
 

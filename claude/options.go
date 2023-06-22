@@ -1,6 +1,9 @@
 package claude
 
-import "errors"
+import (
+	"errors"
+	"fmt"
+)
 
 type Option func(*Client) error
 
@@ -9,6 +12,7 @@ func WithApiToken(token string) Option {
 		if len(token) == 0 {
 			return errors.New("api token can not empty")
 		}
+		fmt.Printf("token: %s\n", token)
 		cli.apiToken = token
 		return nil
 	}
@@ -20,16 +24,6 @@ func WithBaseUrl(url string) Option {
 			return errors.New("base url can not empty")
 		}
 		cli.client.SetBaseURL(url)
-		return nil
-	}
-}
-
-func WithGroupId(groupId string) Option {
-	return func(cli *Client) error {
-		if len(groupId) == 0 {
-			return errors.New("group id can not empty")
-		}
-		cli.groupId = groupId
 		return nil
 	}
 }

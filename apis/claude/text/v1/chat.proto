@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package minimax.text.v1;
+package claude.text.v1;
 
 option go_package = "github.com/ConnectAI-E/go-claude/gen/go/claude/text/v1;text";
 option java_multiple_files = true;
@@ -12,7 +12,14 @@ message UserMeta {
   string user_id = 1;
 }
 
-
+message Message {
+  // 当前支持以下：
+  // Human: 表示用户
+  // Assistant: 表示对话助手
+  string role = 1;
+  // 对话内容，不能为空。
+  string content = 2;
+}
 
 
 message ChatCompletionsRequest {
@@ -30,18 +37,20 @@ message ChatCompletionsRequest {
   //claude-instant-1.1-100k
   //claude-instant-1.0
   string model = 1;
-  // 否 对回复添加情绪预测。注意，当with_emotion=true，且请求上下文（输入和输出文本）长时，请求会显著变慢，达到数秒。
+  //停用词
   repeated string stop_sequences = 2;
-  // 否 	是否以流式接口的形式返回数据，默认false。
+  //否 	是否以流式接口的形式返回数据，默认false。
   bool stream = 3;
-  int32 maxTokensToSample=4;
-  // 对话问题、人物或功能设定 ，不可为空
-  string prompt = 5;
-  // 	对话上下文信息。说明："user_name": "我", "bot_name": "专家"
+  //最大token
+  int32 max_tokens_to_sample=4;
+  //对话问题、人物或功能设定 ，不可为空
+  repeated Message messages = 5;
+  //对话上下文信息。说明："user_name": "我", "bot_name": "专家"
   UserMeta metadata = 6;
   float temperature = 7;
   float top_p = 8;
   int32 top_k = 9;
+  string prompt = 10;
 }
 
 

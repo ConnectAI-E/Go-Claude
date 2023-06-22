@@ -10,4 +10,3 @@ lint:
   use:
     - DEFAULT
   allow_comment_ignores: true
-  allow_comment_ignores: true

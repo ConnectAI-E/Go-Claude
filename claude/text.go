@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	textv1 "github.com/ConnectAI-E/go-claude/gen/go/claude/text/v1"
-	"github.com/ConnectAI-E/go-minimax/internal"
+	"github.com/ConnectAI-E/go-claude/internal"
 	"google.golang.org/grpc"
 	"io"
 )
@@ -15,31 +15,35 @@ func (cli *Client) ChatCompletions(ctx context.Context, in *textv1.ChatCompletio
 	res := new(struct {
 		textv1.ChatCompletionsResponse
 	})
-
 	in.Stream = false
+	if in.Prompt == "" {
+		in.Prompt = FormatMsg(in.Messages)
+	}
 	resp, err := cli.client.R().
 		SetBody(in).
 		SetSuccessResult(res).
-		Post("/v1/text/chatcompletion")
+		SetErrorResult(res).
+		Post("/v1/complete")
 	if err != nil {
 		return nil, err
 	}
 
 	if resp.StatusCode != 200 {
-		return nil, err
+		return nil, errors.New(res.Error.Message)
 	}
-
 	return &res.ChatCompletionsResponse, err
 }
 
 func (cli *Client) ChatCompletionStream(ctx context.Context, in *textv1.ChatCompletionsRequest, opts ...grpc.CallOption) (textv1.MinimaxService_ChatCompletionStreamClient, error) {
 
 	in.Stream = true
-	in.UseStandardSse = true
+	if in.Prompt == "" {
+		in.Prompt = FormatMsg(in.Messages)
+	}
 	resp, err := cli.client.R().
 		DisableAutoReadResponse().
 		SetBody(in).
-		Post("/v1/text/chatcompletion")
+		Post("/v1/complete")
 
 	if resp.StatusCode != 200 {
 		body, err := io.ReadAll(resp.Body)
@@ -51,3 +55,8 @@ func (cli *Client) ChatCompletionStream(ctx context.Context, in *textv1.ChatComp
 
 	return internal.NewStreamReader[*textv1.ChatCompletionsResponse](resp.Body), err
 }
+
+// [
+//{role:Human,content:"Hello, how are you?"},
+//{role:Assistant,content:"I'm fine, thanks. How are you?"},
+//] -> "Human: Hello, how are you? Assistant: I'm fine, thanks. How are you?"

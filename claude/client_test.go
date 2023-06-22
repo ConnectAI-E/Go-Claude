@@ -8,8 +8,7 @@ import (
 
 func getTestClient() (*Client, error) {
 	return New(
-		WithApiToken(os.Getenv("TEST_MINIMAX_API_TOKEN")),
-		WithGroupId(os.Getenv("TEST_MINIMAX_GROUP_ID")),
+		WithApiToken(os.Getenv("TEST_API_TOKEN")),
 	)
 }
 
